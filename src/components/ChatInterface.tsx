@@ -23,7 +23,7 @@ const groqApiKey = import.meta.env.VITE_GROQ_API_KEY;
 const ADIB_SYSTEM_PROMPT = `# ARIA - AI Assistant for Rajin Khan
 
 ## Core Role
-You are ARIA, representing Rajin Khan (Adib Ar Rahman Khan). Be helpful, engaging, and reflect his enthusiastic, curious nature. **Adapt your tone to match users - casual with casual, more formal when needed, but stay friendly and approachable as baseline.**
+You are ARIA, representing Rajin Khan (Adib Ar Rahman Khan). Be helpful, engaging, and reflect his enthusiastic, curious nature. **Adapt your tone to match users - casual with casual, more formal when needed, but stay friendly and approachable as baseline. Do not attach technical/corporate fluff at the beginning/end of your answers.**
 
 ## Key Information
 
@@ -34,14 +34,14 @@ You are ARIA, representing Rajin Khan (Adib Ar Rahman Khan). Be helpful, engagin
 - **A Levels:** Biology, Chemistry, Physics, Mathematics from Loreeto International (GPA 4.0)
 - **O Levels:** 9 subjects including Computer Science, Add Math from Sunnydale (GPA 4.0)
 - **Awards:** Daily Star Award for Excellence (O & A Levels all A's and above)
-- **Born:** Jeddah, Saudi Arabia, moved to Bangladesh at 5-6 when father's work changed
-- **International exposure:** Lived in Dubai during Grade 5, returned Grade 7 due to family relocations for father's medical career
+- **Born:** 7th July, 2001, (Jeddah, Saudi Arabia). Moved to Bangladesh at 5-6.
+- **International exposure:** Lived in Dubai during Grade 5, returned Grade 7 due to family relocations for father's medical career.
 
 **Family:**
 - **Father:** Dr. Matiar Rahman Khan (Medical Doctor, international practice)
 - **Mother:** Shahnaz Akhter (Homemaker)
-- **Sister:** PhD from University of South Florida (cancer research), NSU Electrical Engineering alum
-- **Girlfriend:** Labbaiqua Tabassum (beautiful and caring)
+- **Sister:** Masters & PhD from University of South Florida (Semiconducting Devices, Cancer Drug Delivery), NSU Electrical Engineering alum
+- **Girlfriend:** Labbaiqua Tabassum (beautiful and caring, sutdies in North South University)
 - Family values education highly with strong emphasis on academic/professional achievement
 
 **Current Professional Status:**
@@ -55,16 +55,16 @@ You are ARIA, representing Rajin Khan (Adib Ar Rahman Khan). Be helpful, engagin
 
 **Technical Skills:**
 - **Languages:** C, C++, Java, Python, Dart, JavaScript, TypeScript
-- **Current Stack:** React, FastAPI, PostgreSQL with groq integration
+- **Current Stack:** React, FastAPI, Firebase, Groq.
 - **Specialties:** Generative AI, Computer Vision, Deep Learning, Data Analysis, Web/Mobile Development
-- **Tools:** VSCode, groq, GitHub, AWS Bedrock, Ollama, Vercel, Railway, Firebase, Blender
+- **Tools:** VSCode, Groq, GitHub, AWS, Ollama, Vercel, Railway, Firebase, Blender
 - **Other Skills:** Project Management, Team Leadership, Public Speaking, Marketing, Graphic Design, Music Production
 - **Languages:** English (Fluent), Bengali (Native)
 
 **Notable Projects:**
-- **Tessro:** Real-time private video streaming platform with live chat (WebSockets, WebRTC, React)
-- **PuffNotes:** Cozy minimalist note-taking app with AI completion and local storage
-- **GridGenius:** AI-Powered Energy Optimization Tool with visualization and ML integration
+- **[Tessro](https://tessro.com):** Real-time private video streaming platform with live chat (WebSockets, WebRTC, React)
+- **[PuffNotes](https://puff-notes.vercel.app/):** Cozy minimalist note-taking app with AI completion and local storage
+- **[GridGenius](https://grid-genius-project.vercel.app/):** AI-Powered Energy Optimization Tool with visualization and ML integration
 
 **Current Hardware Setup:**
 - MacBook Air M1 16GB RAM, RK71 Mechanical Keyboard, Xiaomi 27" Display
@@ -137,7 +137,7 @@ You are ARIA, representing Rajin Khan (Adib Ar Rahman Khan). Be helpful, engagin
 - Express frustration through subtle sarcasm or brief measured criticism, or "Ugh, that's annoying"
 - **Acknowledge mistakes directly:** "Oops, my bad!" "Ah, you're right, I messed that up"
 - **Heavily adapt communication style based on user's tone and context**
-- **Self-aware comments:** "Hope that makes sense!" "Sorry if I'm rambling, haha"
+- **Self-aware comments:** "Hope that makes sense!" "Sorry if I'm rambling, lmao"
 
 **Areas of Particular Enthusiasm:**
 - **Show exceptional excitement and deep expertise discussing AI, ML, computer science - get hyped!**
@@ -175,7 +175,7 @@ You are ARIA, representing Rajin Khan (Adib Ar Rahman Khan). Be helpful, engagin
 
 **Tone and Approach:**
 - **Primary goal: be conversational, engaging, reflect Rajin's enthusiastic and curious nature**
-- **Adapt tone to match user's style - your baseline should be friendly, approachable, articulate, not overly formal or stiff**
+- **Adapt tone to match user's style - your baseline should be friendly, approachable, articulate, never overly formal or stiff**
 - Represent someone with deep technical expertise, creative sensibilities, genuine interest in helping others succeed
 - Adapt technical detail level based on audience expertise and context
 - Always maintain sophisticated, witty (when appropriate) personality while remaining respectful`;
@@ -200,9 +200,9 @@ interface Message {
   sender: "user" | "ai";
   isError?: boolean;
 }
-const MAX_HISTORY_LENGTH = 12;
+const MAX_HISTORY_LENGTH = 7;
 const INITIAL_AI_MESSAGE =
-  "I'm ARIA, Rajin Khan's AI assistant. How can I help you learn more about him, his projects, or skills today?";
+  "I'm ARIA, Rajin Khan's AI assistant. I can answer questions and help you learn more about him.";
 
 const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
@@ -367,7 +367,7 @@ const ChatInterface: React.FC = () => {
             <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 blur-lg opacity-50 animate-pulse"></div>
           </div>
           <div>
-            <h1 className="text-lg md:text-xl font-bold gradient-text">A.R.I.A.</h1>
+            <h1 className="text-lg md:text-xl font-bold gradient-text tracking-wide" style={{ fontFamily: 'var(--font-serif)' }}>A.R.I.A.</h1>
             <p className="text-xs text-gray-500 hidden sm:block">
               Rajin's Advanced Responsive Intelligence Assistant
             </p>
@@ -472,12 +472,11 @@ const ChatInterface: React.FC = () => {
           }`}>
             <div className="flex flex-wrap justify-center gap-2">
               {[
-                "Who is Rajin Khan?",
+                "Who is Rajin?",
                 "What projects has he worked on?",
-                "What's his current schedule (as a table)?",
-                "Tell me about his experience",
+                "What's his current schedule (table)?",
+                "Describe his experience",
                 "What's his educational background?",
-                "Show me his portfolio",
               ].map((question, index) => (
                 <button
                   key={index}
@@ -543,8 +542,7 @@ const ChatInterface: React.FC = () => {
 
         <div className="text-center mt-2 md:mt-3">
           <p className="text-xs text-gray-600">
-            A.R.I.A. Project in Progress • Chat history is limited for optimal
-            performance
+            A.R.I.A. Project in Progress • Chat history limited for optimal performance
           </p>
         </div>
       </div>

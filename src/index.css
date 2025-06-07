@@ -42,6 +42,7 @@
   --color-success-text: #34d399;
   
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Lora", "Georgia", "Times New Roman", serif;
 }
 
 html, body, #root {
