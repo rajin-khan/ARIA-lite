@@ -474,7 +474,7 @@ const ChatInterface: React.FC = () => {
               {[
                 "Who is Rajin Khan?",
                 "What projects has he worked on?",
-                "What are his technical skills?",
+                "What's his current schedule (as a table)?",
                 "Tell me about his experience",
                 "What's his educational background?",
                 "Show me his portfolio",
