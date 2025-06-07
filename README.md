@@ -47,8 +47,8 @@ A.R.I.A. Lite serves as an intelligent personal assistant that demonstrates:
 
 ## 📸 Screenshots
 
-![Chat Preview 2](./ss2.png)
-![Chat Preview 3](./ss3.png)
+![Chat Preview 2](./ssa.png)
+![Chat Preview 3](./ssb.png)
 
 ---
 
