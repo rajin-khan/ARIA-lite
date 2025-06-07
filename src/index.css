@@ -1,0 +1,290 @@
+/* src/index.css */
+@import "tailwindcss";
+
+:root {
+  /* Core Palette - Pitch Black with Purple/Blue Accents */
+  --color-bg-deep: #000000; /* Pure black background */
+  --color-bg-surface: #0a0a0f; /* Slightly lighter black for surfaces */
+  --color-bg-elevated: #111118; /* Elevated surfaces */
+  
+  /* Purple/Blue Gradient Colors */
+  --color-primary-purple: #8b5cf6; /* Vibrant purple */
+  --color-primary-blue: #3b82f6; /* Vibrant blue */
+  --color-accent-purple: #a855f7; /* Lighter purple */
+  --color-accent-blue: #60a5fa; /* Lighter blue */
+  
+  /* Gradient Definitions */
+  --gradient-primary: linear-gradient(135deg, var(--color-primary-purple), var(--color-primary-blue));
+  --gradient-subtle: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1));
+  --gradient-glow: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(59, 130, 246, 0.3));
+  
+  /* Surface Colors */
+  --color-surface-ai-bubble: rgba(17, 17, 24, 0.8);
+  --color-surface-user-bubble: rgba(139, 92, 246, 0.15);
+  --color-surface-input: rgba(10, 10, 15, 0.9);
+  --color-surface-button: rgba(139, 92, 246, 0.2);
+  --color-surface-button-hover: rgba(139, 92, 246, 0.3);
+
+  /* Borders */
+  --color-border-subtle: rgba(139, 92, 246, 0.2);
+  --color-border-strong: rgba(139, 92, 246, 0.4);
+  --color-border-glow: rgba(139, 92, 246, 0.6);
+
+  /* Text Colors */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a1a1aa;
+  --color-text-tertiary: #71717a;
+  --color-text-accent: var(--color-accent-purple);
+
+  /* Semantic Colors */
+  --color-error-text: #f87171;
+  --color-error-bg: rgba(239, 68, 68, 0.1);
+  --color-success-text: #34d399;
+  
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-text-primary);
+  background: var(--color-bg-deep);
+  position: relative;
+  @apply antialiased selection:bg-purple-500/30 selection:text-white;
+}
+
+/* Animated Background Layers */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 0% 100%, rgba(96, 165, 250, 0.1) 0%, transparent 40%);
+  animation: gradientFlow 20s ease-in-out infinite;
+  z-index: -2;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, rgba(139, 92, 246, 0.3), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(59, 130, 246, 0.3), transparent),
+    radial-gradient(1px 1px at 90px 40px, rgba(168, 85, 247, 0.4), transparent),
+    radial-gradient(1px 1px at 130px 80px, rgba(96, 165, 250, 0.4), transparent);
+  background-size: 200px 200px, 150px 150px, 100px 100px, 120px 120px;
+  animation: starField 30s linear infinite;
+  z-index: -1;
+  opacity: 0.6;
+}
+
+@keyframes gradientFlow {
+  0%, 100% {
+    background-position: 0% 0%, 100% 100%, 50% 0%, 0% 100%;
+  }
+  25% {
+    background-position: 100% 0%, 0% 100%, 0% 50%, 100% 0%;
+  }
+  50% {
+    background-position: 100% 100%, 0% 0%, 50% 100%, 100% 50%;
+  }
+  75% {
+    background-position: 0% 100%, 100% 0%, 100% 50%, 0% 50%;
+  }
+}
+
+@keyframes starField {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-200px, -200px); }
+}
+
+/* Pulsing glow animation */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.6), 0 0 60px rgba(59, 130, 246, 0.3); }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--gradient-primary);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-purple);
+}
+
+@layer utilities {
+  @keyframes slideInUp {
+    0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .animate-slide-in-up {
+    animation: slideInUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.05); opacity: 1; }
+  }
+  .animate-breathe {
+    animation: breathe 2s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  .animate-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .animate-shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: shimmer 2s infinite;
+  }
+
+  .glow-border {
+    position: relative;
+    border: 1px solid var(--color-border-subtle);
+    transition: all 0.3s ease;
+  }
+  .glow-border:hover {
+    border-color: var(--color-border-glow);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  }
+  .glow-border:focus-within {
+    border-color: var(--color-border-glow);
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+  }
+
+  .gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Enhanced markdown styles */
+  .markdown-content {
+    @apply text-sm leading-relaxed;
+    color: var(--color-text-primary);
+  }
+  .markdown-content p { @apply my-2; }
+  .markdown-content strong { 
+    @apply font-semibold;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .markdown-content em { @apply italic text-purple-300; }
+  .markdown-content a {
+    @apply text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors duration-200;
+    text-decoration-color: var(--color-primary-blue);
+  }
+  .markdown-content code:not([class*="language-"]) {
+    @apply px-2 py-1 rounded text-xs font-mono;
+    background: rgba(139, 92, 246, 0.2);
+    color: var(--color-accent-purple);
+    border: 1px solid var(--color-border-subtle);
+  }
+  .markdown-content pre {
+    @apply p-4 rounded-xl overflow-x-auto my-4 text-sm;
+    background: rgba(10, 10, 15, 0.8);
+    border: 1px solid var(--color-border-subtle);
+    backdrop-filter: blur(10px);
+  }
+  .markdown-content pre code { 
+    @apply p-0 bg-transparent font-mono;
+    color: var(--color-text-secondary);
+  }
+  
+  .markdown-content ul, .markdown-content ol { @apply my-3 ml-5; }
+  .markdown-content li { @apply mb-2; }
+  .markdown-content ul li {
+    @apply list-none relative pl-4;
+    &::before {
+      content: "→"; 
+      color: var(--color-accent-purple);
+      position: absolute; 
+      left: 0; 
+      top: 0;
+      font-weight: bold;
+    }
+  }
+  .markdown-content ol li {
+    @apply list-decimal pl-2;
+    &::marker { 
+      color: var(--color-accent-blue); 
+      font-weight: 600;
+    }
+  }
+  
+  .markdown-content blockquote {
+    @apply border-l-2 pl-4 py-2 my-4 italic;
+    border-color: var(--color-accent-purple);
+    background: rgba(139, 92, 246, 0.05);
+    color: var(--color-text-secondary);
+  }
+  
+  .markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4 {
+    @apply font-bold mt-6 mb-3 leading-tight;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .markdown-content h1 { @apply text-xl; }
+  .markdown-content h2 { @apply text-lg; }
+  .markdown-content h3 { @apply text-base; }
+  
+  .markdown-content hr {
+    @apply border-none my-6 h-px;
+    background: var(--gradient-primary);
+    opacity: 0.3;
+  }
+  
+  .markdown-content table {
+    @apply w-full my-4 border-collapse text-sm;
+    border: 1px solid var(--color-border-subtle);
+    background: rgba(10, 10, 15, 0.5);
+  }
+  .markdown-content th, .markdown-content td {
+    @apply border px-3 py-2 text-left;
+    border-color: var(--color-border-subtle);
+  }
+  .markdown-content th {
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--color-accent-purple);
+    font-weight: 600;
+  }
+}
