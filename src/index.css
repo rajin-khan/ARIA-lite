@@ -61,67 +61,6 @@ body {
   @apply antialiased selection:bg-purple-500/30 selection:text-white;
 }
 
-/* Animated Background Layers */
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 50% 0%, rgba(168, 85, 247, 0.1) 0%, transparent 40%),
-    radial-gradient(circle at 0% 100%, rgba(96, 165, 250, 0.1) 0%, transparent 40%);
-  animation: gradientFlow 20s ease-in-out infinite;
-  z-index: -2;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    radial-gradient(2px 2px at 20px 30px, rgba(139, 92, 246, 0.3), transparent),
-    radial-gradient(2px 2px at 40px 70px, rgba(59, 130, 246, 0.3), transparent),
-    radial-gradient(1px 1px at 90px 40px, rgba(168, 85, 247, 0.4), transparent),
-    radial-gradient(1px 1px at 130px 80px, rgba(96, 165, 250, 0.4), transparent);
-  background-size: 200px 200px, 150px 150px, 100px 100px, 120px 120px;
-  animation: starField 30s linear infinite;
-  z-index: -1;
-  opacity: 0.6;
-}
-
-@keyframes gradientFlow {
-  0%, 100% {
-    background-position: 0% 0%, 100% 100%, 50% 0%, 0% 100%;
-  }
-  25% {
-    background-position: 100% 0%, 0% 100%, 0% 50%, 100% 0%;
-  }
-  50% {
-    background-position: 100% 100%, 0% 0%, 50% 100%, 100% 50%;
-  }
-  75% {
-    background-position: 0% 100%, 100% 0%, 100% 50%, 0% 50%;
-  }
-}
-
-@keyframes starField {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(-200px, -200px); }
-}
-
-/* Pulsing glow animation */
-@keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
-  50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.6), 0 0 60px rgba(59, 130, 246, 0.3); }
-}
-
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 4px;
@@ -146,32 +85,7 @@ body::after {
     animation: slideInUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   }
 
-  @keyframes breathe {
-    0%, 100% { transform: scale(1); opacity: 0.7; }
-    50% { transform: scale(1.05); opacity: 1; }
-  }
-  .animate-breathe {
-    animation: breathe 2s ease-in-out infinite;
-  }
-
-  @keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-  }
-  .animate-shimmer {
-    position: relative;
-    overflow: hidden;
-  }
-  .animate-shimmer::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    animation: shimmer 2s infinite;
-  }
+  /* OPTIMIZATION: Removed animate-breathe and animate-shimmer keyframes as they are decorative and consume resources. */
 
   .glow-border {
     position: relative;
@@ -220,9 +134,9 @@ body::after {
   }
   .markdown-content pre {
     @apply p-4 rounded-xl overflow-x-auto my-4 text-sm;
-    background: rgba(10, 10, 15, 0.8);
+    /* OPTIMIZATION: Removed backdrop-filter and used a solid, performant background color. */
+    background-color: var(--color-bg-elevated);
     border: 1px solid var(--color-border-subtle);
-    backdrop-filter: blur(10px);
   }
   .markdown-content pre code { 
     @apply p-0 bg-transparent font-mono;

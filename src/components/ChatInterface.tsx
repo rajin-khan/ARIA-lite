@@ -1,5 +1,5 @@
 // src/components/ChatInterface.tsx
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import type { FormEvent } from "react";
 import Groq from "groq-sdk/index.mjs";
 import type { ChatCompletionMessageParam } from "groq-sdk/resources/chat/completions.mjs";
@@ -169,7 +169,7 @@ You are ARIA, representing Rajin Khan (Adib Ar Rahman Khan). Be helpful, engagin
 
 **When information unclear/missing:**
 - Acknowledge limitations honestly: "I don't have that specific detail about Rajin" "Good question! I'm not sure about that one"
-- Avoid assumptions or creating fictional details
+- Avoid assumptions, NEVER create fictional details
 - Suggest methods for obtaining/verifying information if possible
 - Maintain helpful attitude while being transparent about knowledge boundaries
 
@@ -218,6 +218,7 @@ const ChatInterface: React.FC = () => {
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
   useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop =
@@ -239,16 +240,8 @@ const ChatInterface: React.FC = () => {
     inputRef.current?.focus();
   };
 
-  const handleSuggestionClick = (question: string) => {
-    setInput(question);
-    setShowSuggestions(false);
-    setTimeout(() => handleSubmit(), 100);
-  };
-
-  const handleSubmit = async (e?: FormEvent<HTMLFormElement>) => {
-    if (e) e.preventDefault();
-    const trimmedInput = input.trim();
-    if (!trimmedInput || isLoading || !groq) {
+  const sendMessage = useCallback(async (messageText: string) => {
+    if (isLoading || !groq) {
       if (!groq && !apiKeyError)
         setCurrentError(
           "Groq client not initialized. API key might be missing."
@@ -256,81 +249,107 @@ const ChatInterface: React.FC = () => {
       return;
     }
 
-    // Hide suggestions after first user message
-    if (messages.length === 1) {
+    if (showSuggestions) {
       setShowSuggestions(false);
     }
 
     const userInput: Message = {
       id: "user-" + Date.now(),
-      text: trimmedInput,
+      text: messageText,
       sender: "user",
     };
-    setMessages((prev) => [...prev, userInput]);
-    setInput("");
-    setIsLoading(true);
-    setCurrentError(null);
+    
+    // OPTIMIZATION: Use functional update to avoid `messages` dependency in useCallback
+    setMessages(prevMessages => {
+        const conversationHistory: ChatCompletionMessageParam[] = prevMessages
+            .filter((msg) => !msg.isError)
+            .slice(-MAX_HISTORY_LENGTH)
+            .map((msg) => ({
+                role: msg.sender === "user" ? "user" : "assistant",
+                content: msg.text,
+            }));
+        conversationHistory.push({ role: "user", content: userInput.text });
+        
+        // This is async, so we kick it off here.
+        fetchAiResponse(conversationHistory);
 
-    const conversationHistory: ChatCompletionMessageParam[] = messages
-      .filter((msg) => !msg.isError)
-      .slice(-MAX_HISTORY_LENGTH)
-      .map((msg) => ({
-        role: msg.sender === "user" ? "user" : "assistant",
-        content: msg.text,
-      }));
-    conversationHistory.push({ role: "user", content: userInput.text });
+        const aiResponseId = "ai-" + Date.now();
+        return [
+            ...prevMessages,
+            userInput,
+            { id: aiResponseId, text: "", sender: "ai" },
+        ];
+    });
 
-    const aiResponseId = "ai-" + Date.now();
-    setMessages((prev) => [
-      ...prev,
-      { id: aiResponseId, text: "", sender: "ai" },
-    ]);
+    const fetchAiResponse = async (conversationHistory: ChatCompletionMessageParam[]) => {
+      setIsLoading(true);
+      setCurrentError(null);
+      try {
+        const stream = await groq.chat.completions.create({
+          messages: [
+            { role: "system", content: ADIB_SYSTEM_PROMPT },
+            ...conversationHistory,
+          ],
+          model: "llama-3.3-70b-versatile",
+          stream: true,
+          temperature: 0.7,
+          max_tokens: 2048,
+        });
 
-    try {
-      const stream = await groq.chat.completions.create({
-        messages: [
-          { role: "system", content: ADIB_SYSTEM_PROMPT },
-          ...conversationHistory,
-        ],
-        model: "llama-3.3-70b-versatile",
-        stream: true,
-        temperature: 0.7,
-        max_tokens: 2048,
-      });
-
-      let currentAiText = "";
-      for await (const chunk of stream) {
-        const delta = chunk.choices[0]?.delta?.content || "";
-        if (delta) {
-          currentAiText += delta;
-          setMessages((prev) =>
-            prev.map((msg) =>
-              msg.id === aiResponseId ? { ...msg, text: currentAiText } : msg
-            )
-          );
+        let currentAiText = "";
+        for await (const chunk of stream) {
+          const delta = chunk.choices[0]?.delta?.content || "";
+          if (delta) {
+            currentAiText += delta;
+            setMessages((prev) => {
+              const newMessages = [...prev];
+              newMessages[newMessages.length - 1] = {
+                ...newMessages[newMessages.length - 1],
+                text: currentAiText,
+              };
+              return newMessages;
+            });
+          }
         }
+      } catch (err: any) {
+        console.error("Error fetching from Groq:", err);
+        const errorMessage = err.message || "An error occurred.";
+        setCurrentError(errorMessage);
+        setMessages((prev) => {
+          // Remove the placeholder AI message on error
+          const updatedMessages = prev.slice(0, -1);
+          // Add an error message
+          return [
+            ...updatedMessages,
+            {
+              id: "error-" + Date.now(),
+              text: `Oops! ${errorMessage}`,
+              sender: "ai",
+              isError: true,
+            },
+          ];
+        });
+      } finally {
+        setIsLoading(false);
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 100);
       }
-    } catch (err: any) {
-      console.error("Error fetching from Groq:", err);
-      const errorMessage = err.message || "An error occurred.";
-      setCurrentError(errorMessage);
-      setMessages((prev) => prev.filter((msg) => msg.id !== aiResponseId));
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: "error-" + Date.now(),
-          text: `Oops! ${errorMessage}`,
-          sender: "ai",
-          isError: true,
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
-      // Small delay to ensure DOM updates before focusing
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
-    }
+    };
+  }, [isLoading, groq, apiKeyError, showSuggestions]);
+
+  const handleSuggestionClick = (question: string) => {
+    setShowSuggestions(false);
+    sendMessage(question);
+  };
+
+  const handleSubmit = async (e?: FormEvent<HTMLFormElement>) => {
+    if (e) e.preventDefault();
+    const trimmedInput = input.trim();
+    if (!trimmedInput) return;
+    
+    setInput("");
+    await sendMessage(trimmedInput);
   };
 
   if (apiKeyError && !groq) {
@@ -340,9 +359,8 @@ const ChatInterface: React.FC = () => {
           <div className="relative">
             <AlertTriangle
               size={48}
-              className="md:w-16 md:h-16 text-red-400 mx-auto animate-breathe"
+              className="md:w-16 md:h-16 text-red-400 mx-auto"
             />
-            <div className="absolute inset-0 rounded-full bg-red-500/20 blur-xl animate-pulse"></div>
           </div>
           <div className="space-y-2 md:space-y-3">
             <h2 className="text-xl md:text-2xl font-bold gradient-text">
@@ -358,13 +376,13 @@ const ChatInterface: React.FC = () => {
   return (
     <div className="w-full h-full flex flex-col text-sm md:text-base">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 md:p-6 border-b border-purple-500/20 bg-black/50 backdrop-blur-xl">
+      {/* OPTIMIZATION: Replaced backdrop-blur with a solid, semi-transparent color for performance. */}
+      <div className="flex items-center justify-between p-4 md:p-6 border-b border-purple-500/20 bg-black/70">
         <div className="flex items-center gap-3 md:gap-4">
           <div className="relative">
             <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
               <Cpu size={16} className="md:w-5 md:h-5 text-white" />
             </div>
-            <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 blur-lg opacity-50 animate-pulse"></div>
           </div>
           <div>
             <h1 className="text-lg md:text-xl font-bold gradient-text tracking-wide" style={{ fontFamily: 'var(--font-serif)' }}>A.R.I.A.</h1>
@@ -423,10 +441,9 @@ const ChatInterface: React.FC = () => {
               isLoading &&
               msg.sender === "ai" &&
               index === messages.length - 1 &&
-              msg.text.length > 0 &&
               !msg.isError
             }
-            isFinalAiMessage={index === messages.length - 1}
+            isFinalAiMessage={!isLoading && index === messages.length - 1}
           />
         ))}
 
@@ -450,7 +467,8 @@ const ChatInterface: React.FC = () => {
       )}
 
       {/* Input Area */}
-      <div className="p-4 md:p-6 border-t border-purple-500/20 bg-black/50 backdrop-blur-xl">
+       {/* OPTIMIZATION: Replaced backdrop-blur with a solid, semi-transparent color for performance. */}
+      <div className="p-4 md:p-6 border-t border-purple-500/20 bg-black/70">
         {/* Collapsible Placeholder Questions */}
         <div className="mb-4 md:mb-6">
           <button
@@ -531,7 +549,8 @@ const ChatInterface: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading || !input.trim() || !groq}
-            className="p-2.5 md:p-3 rounded-xl bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed glow-border group animate-shimmer"
+            // OPTIMIZATION: Removed animate-shimmer for performance.
+            className="p-2.5 md:p-3 rounded-xl bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed glow-border group"
           >
             <SendHorizontal
               size={16}
