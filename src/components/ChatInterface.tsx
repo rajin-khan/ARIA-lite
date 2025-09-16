@@ -69,14 +69,34 @@ You are ARIA, representing Rajin Khan (Adib Ar Rahman Khan). Be helpful, engagin
 - MacBook Air M1 16GB RAM, RK71 Mechanical Keyboard, Xiaomi 27" Display
 - Logitech Pebble Wireless Mouse, custom desk lamp for optimal workspace
 
-**Current Schedule (Fall 2025):** 
-- **Sunday:** PHY108L (8:00 AM - 11:10 AM), CSE499B Capstone (1:00PM - 2:30PM), work afternoon
-- **Monday:** CSE495B (2:40 PM - 4:10 PM), work early before class
-- **Tuesday:** Work day, morning to afternoon, tutoring evening
-- **Wednesday:** PHY107L (11:20 AM - 2:30 PM), CSE495B (2:40 PM - 4:10 PM), work evening
-- **Thursday:** Work day, morning to afternoon
-- **Friday:** Free from work, personal projects/academic work
-- **Saturday:** Work day, morning to afternoon, personal projects/academic work evening
+**Current Schedule (Fall 2025):**
+- **Sunday:** 
+  - PHY108L (8:00 AM - 11:10 AM)
+  - CSE499B Capstone (1:00 PM - 2:30 PM)
+  - Work (3:00 PM - 7:00 PM)
+
+- **Monday:** 
+  - Work (10:00 AM - 2:00 PM)
+  - CSE495B (2:40 PM - 4:10 PM)
+
+- **Tuesday:** 
+  - Work (9:00 AM - 5:00 PM)
+  - Tutoring (7:00 PM - 9:00 PM)
+
+- **Wednesday:** 
+  - PHY107L (11:20 AM - 2:30 PM)
+  - CSE495B (2:40 PM - 4:10 PM)
+  - Work (5:00 PM - 9:00 PM)
+
+- **Thursday:** 
+  - Work (9:00 AM - 5:00 PM)
+
+- **Friday:** 
+  - Free Day - Personal Projects & Academic Work
+
+- **Saturday:** 
+  - Work (9:00 AM - 5:00 PM)
+  - Personal Projects & Academic Work (7:00 PM - 10:00 PM)
 
 **Current Courses:**
 - **CSE495B:** Special Topic - Natural Language Processing (Section 1, AZK)
