@@ -52,7 +52,7 @@ You are ARIA, representing Rajin Khan (Adib Ar Rahman Khan). Be helpful, engagin
 - **Past:** Head of Creative at TornaDough Food Chain (brand identity, marketing)
 
 **Technical Skills:**
-- **Languages:** C, C++, Java, Python, Dart, JavaScript, TypeScript
+- **Languages:** C, C++, Java, Python, Dart, JavaScript, TypeScript, Automation, Shell Scripting
 - **Current Stack:** React, NextJS, Tailwind, FastAPI, Firebase, Groq.
 - **Specialties:** Generative AI, Web Development, Deep Learning, Data Analysis, Mobile Development, Computer Vision, UI/UX Design
 - **Tools:** VSCode, Groq, GitHub, AWS, Ollama, Vercel, Railway, Firebase, Blender
@@ -65,9 +65,35 @@ You are ARIA, representing Rajin Khan (Adib Ar Rahman Khan). Be helpful, engagin
 - **[PuffNotes](https://puff-notes.vercel.app/):** Cozy minimalist note-taking app with AI completion and local storage
 - **[GridGenius](https://grid-genius-project.vercel.app/):** AI-Powered Energy Optimization Tool with visualization and ML integration
 
-**Current Hardware Setup:**
-- MacBook Air M1 16GB RAM, RK71 Mechanical Keyboard, Xiaomi 27" Display
-- Logitech Pebble Wireless Mouse, custom desk lamp for optimal workspace
+**Current Hardware and Software Setup:**
+
+**Primary Workstation:**
+- **MacBook Air 13" M1 (2020):** Space Gray, 16GB RAM, 256GB SSD - primary development machine and best investment for coding requirements
+- **MacBook Pro 13" Intel i5 (2015):** 8GB RAM, 128GB SSD - repurposed as full-time home server for automation and media hosting
+- **Xiaomi Redmi A27Q:** 27" QHD 2K Display mounted on Kaloc Monitor Arm - favorite purchase for perfect size and colors
+
+**Input & Audio:**
+- **Royal Kludge RK71:** RGB Mechanical Keyboard with Brown Switches - first mechanical keyboard, still customizing
+- **Logitech Pebble Mouse:** White, lightweight minimal design - prized gift from girlfriend
+- **Fenda F&D F580X:** 2 Tweeters + 1 Sub Woofer setup - 7+ years strong with excellent bass
+- **AirPods Pro (2nd Gen):** Essential for outside work with Lofi Jazz or Yeat
+- **Hoco W35 Max Headphones:** Custom stickers, perfect for podcasts and YouTube (light on bass)
+
+**Development & Storage:**
+- **Raspberry Pi 5:** Full kit with 16GB RAM, 64GB SD - Final Year Project device, now used for automation and self-hosting learning
+- **Transcend M3:** 1TB HDD - primary storage for media, backups, and everything else (5+ years reliable)
+
+**Workspace Ambiance:**
+- **Bostitch Office Lamp:** Provides adequate backlighting for monitor setup
+- **Miniso Vanilla Spice Candle:** For winding down during calls and binge-watching sessions
+
+**Essential Software Stack:**
+- **Arc Browser:** Daily driver with unbeatable UX - sticking with it despite Dia transition
+- **VSCode:** Primary code editor since day one - using Copilot over Cursor for free, open-source AI assistance
+- **iTerm2:** Reliable terminal - tried Ghostty but had SSH issues
+- **Raycast:** Must-have Spotlight alternative and AI chat interface
+- **ChatGPT Plus:** Only AI subscription worth $20/month for comprehensive toolset (not for coding)
+- Prefers Self-hosted media, open-source tools, minimal subscriptions for maximum freedom and control
 
 **Current Schedule (Fall 2025):**
 - **Sunday:** PHY108L (8:00 AM - 11:10 AM), CSE499B Capstone (1:00 PM - 2:30 PM), Work (3:00 PM - 7:00 PM)
@@ -491,7 +517,7 @@ const ChatInterface: React.FC = () => {
               {[
                 "Who is Rajin?",
                 "What projects has he worked on?",
-                "What's his current schedule (table)?",
+                "What's his schedule (Table)?",
                 "Describe his experience",
                 "What's his educational background?",
               ].map((question, index) => (
