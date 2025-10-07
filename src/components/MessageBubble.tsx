@@ -12,12 +12,12 @@ interface MessageBubbleProps {
   isError?: boolean;
 }
 
-const MessageBubble: React.FC<MessageBubbleProps> = ({ 
-  text, 
-  sender, 
-  isStreaming, 
-  isFinalAiMessage, 
-  isError 
+const MessageBubble: React.FC<MessageBubbleProps> = ({
+  text,
+  sender,
+  isStreaming,
+  isFinalAiMessage,
+  isError
 }) => {
   const [copied, setCopied] = useState(false);
 
@@ -31,28 +31,32 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
     }
   };
 
-  const shouldAnimate = (sender === 'user' || (sender === 'ai' && isFinalAiMessage));
+  const shouldAnimate = sender === 'user' || (sender === 'ai' && isFinalAiMessage);
+  const animationDelay = sender === 'user' ? '100ms' : '300ms';
 
   if (sender === 'user') {
     return (
-      <div className={`flex items-start justify-end gap-4 group ${shouldAnimate ? 'animate-slide-in-up' : ''}`}>
-        <div className="max-w-[80%] relative">
-          {/* OPTIMIZATION: Removed backdrop-blur and glow div for performance. */}
-          <div className="relative p-4 rounded-2xl rounded-br-md bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-purple-500/30">
-            <p className="text-white leading-relaxed">{text}</p>
-            
-            <button
-              onClick={handleCopy}
-              className="absolute -left-12 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 p-2 rounded-lg bg-black/50 hover:bg-black/70 text-gray-400 hover:text-white border border-white/10"
-              title={copied ? "Copied!" : "Copy message"}
-            >
-              {copied ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
-            </button>
+      <div className={`flex items-start justify-end gap-3 group animate-in`} style={{ "--animation-delay": animationDelay } as React.CSSProperties}>
+        <div className="relative max-w-[85%] sm:max-w-[80%]">
+          <div className="relative z-30 duration-300 ease-out group-hover:-translate-x-1 group-hover:-translate-y-1">
+            {/* --- CHANGE: Adjusted padding for better text alignment --- */}
+            <div className="px-5 py-3 rounded-2xl rounded-br-lg bg-neutral-900">
+              <p className="text-white leading-relaxed" style={{ wordBreak: 'break-word' }}>{text}</p>
+            </div>
           </div>
+          <div className="absolute inset-0 z-20 w-full h-full duration-300 ease-out border border-dashed rounded-2xl border-neutral-700 group-hover:-translate-x-1 group-hover:-translate-y-1" />
+          <div className="absolute inset-0 z-10 w-full h-full duration-300 ease-out border border-dashed rounded-2xl border-neutral-700 group-hover:translate-x-1 group-hover:translate-y-1" />
+          <button
+            onClick={handleCopy}
+            aria-label={copied ? "Copied!" : "Copy message"}
+            className="absolute -left-11 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg bg-neutral-900/50 hover:bg-neutral-800/70 text-neutral-400 hover:text-white border border-neutral-700/50"
+            title={copied ? "Copied!" : "Copy message"}
+          >
+            {copied ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
+          </button>
         </div>
-        
-        <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300">
-          <User size={16} className="text-white" />
+        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center shadow-md">
+          <User size={16} className="text-neutral-400" />
         </div>
       </div>
     );
@@ -60,59 +64,33 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
 
   // AI Message
   return (
-    <div className={`flex items-start justify-start gap-4 group ${shouldAnimate && !isStreaming ? 'animate-slide-in-up' : ''}`}>
-      {/* AI Avatar */}
-      {/* OPTIMIZATION: Removed backdrop-blur and breathe animation for performance. */}
-      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-purple-500/30 flex items-center justify-center group-hover:shadow-purple-500/25 transition-all duration-300">
-        {isError ? (
-          <AlertTriangle size={16} className="text-red-400" />
-        ) : (
-          <Bot size={16} className="text-purple-300" />
-        )}
+    <div className={`flex items-start justify-start gap-3 group ${shouldAnimate && !isStreaming ? 'animate-in' : ''}`} style={{ "--animation-delay": animationDelay } as React.CSSProperties}>
+      <div className={`flex-shrink-0 w-8 h-8 rounded-full border flex items-center justify-center shadow-md transition-colors ${isError ? 'bg-red-900/50 border-red-500/30' : 'bg-neutral-900 border-neutral-700'}`}>
+        {isError ? <AlertTriangle size={16} className="text-red-400" /> : <Bot size={16} className="text-neutral-400" />}
       </div>
-
-      {/* Message Content */}
-      <div className="max-w-[80%] relative">
-        {/* OPTIMIZATION: Removed backdrop-blur and glow div for performance. */}
-        <div className={`relative p-4 rounded-2xl rounded-bl-md border ${
-          isError 
-            ? 'bg-red-500/10 border-red-500/30' 
-            : 'bg-black/40 border-purple-500/20'
-        }`}>
-          {isStreaming && (
-            <div className="absolute top-2 right-2">
-              <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+      <div className="max-w-[85%] sm:max-w-[80%] relative">
+         <div className="relative z-30 duration-300 ease-out group-hover:-translate-x-1 group-hover:-translate-y-1">
+            {/* --- CHANGE: Adjusted padding for better text alignment --- */}
+            <div className={`px-5 py-3 rounded-2xl rounded-bl-lg ${isError ? 'bg-red-900/30' : 'bg-neutral-900'}`}>
+              <div className="markdown-content">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {text || (isStreaming ? '▋' : '')}
+                </ReactMarkdown>
+              </div>
             </div>
-          )}
-
-          {isError ? (
-            <div className="flex items-center gap-2">
-              <AlertTriangle size={16} className="text-red-400 flex-shrink-0" />
-              <p className="text-red-300 leading-relaxed">{text}</p>
-            </div>
-          ) : (
-            <div className="markdown-content">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {text || (isStreaming ? '●' : '')}
-              </ReactMarkdown>
-            </div>
-          )}
-        </div>
+         </div>
+         <div className="absolute inset-0 z-20 w-full h-full duration-300 ease-out border border-dashed rounded-2xl border-neutral-700 group-hover:-translate-x-1 group-hover:-translate-y-1" />
+         <div className="absolute inset-0 z-10 w-full h-full duration-300 ease-out border border-dashed rounded-2xl border-neutral-700 group-hover:translate-x-1 group-hover:translate-y-1" />
 
         {!isError && text.trim() && !isStreaming && (
           <button
             onClick={handleCopy}
-            className="absolute -right-12 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 p-2 rounded-lg bg-black/50 hover:bg-black/70 text-gray-400 hover:text-white border border-white/10"
+            aria-label={copied ? "Copied!" : "Copy message"}
+            className="absolute -right-11 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity p-2 rounded-lg bg-neutral-900/50 hover:bg-neutral-800/70 text-neutral-400 hover:text-white border border-neutral-700/50"
             title={copied ? "Copied!" : "Copy message"}
           >
             {copied ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
           </button>
-        )}
-
-        {isStreaming && (
-          <div className="absolute -bottom-6 left-4">
-            <span className="text-xs text-gray-500 opacity-70 animate-pulse">Generating response...</span>
-          </div>
         )}
       </div>
     </div>

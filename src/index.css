@@ -2,47 +2,16 @@
 @import "tailwindcss";
 
 :root {
-  /* Core Palette - Pitch Black with Purple/Blue Accents */
-  --color-bg-deep: #000000; /* Pure black background */
-  --color-bg-surface: #0a0a0f; /* Slightly lighter black for surfaces */
-  --color-bg-elevated: #111118; /* Elevated surfaces */
-  
-  /* Purple/Blue Gradient Colors */
-  --color-primary-purple: #8b5cf6; /* Vibrant purple */
-  --color-primary-blue: #3b82f6; /* Vibrant blue */
-  --color-accent-purple: #a855f7; /* Lighter purple */
-  --color-accent-blue: #60a5fa; /* Lighter blue */
-  
-  /* Gradient Definitions */
-  --gradient-primary: linear-gradient(135deg, var(--color-primary-purple), var(--color-primary-blue));
-  --gradient-subtle: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1));
-  --gradient-glow: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(59, 130, 246, 0.3));
-  
-  /* Surface Colors */
-  --color-surface-ai-bubble: rgba(17, 17, 24, 0.8);
-  --color-surface-user-bubble: rgba(139, 92, 246, 0.15);
-  --color-surface-input: rgba(10, 10, 15, 0.9);
-  --color-surface-button: rgba(139, 92, 246, 0.2);
-  --color-surface-button-hover: rgba(139, 92, 246, 0.3);
+  --color-bg-deep: #0a0a0a;
+  --color-bg-surface: #171717;
+  --color-border-subtle: #404040;
+  --color-border-strong: #737373;
+  --color-text-primary: #f5f5f5;
+  --color-text-secondary: #a3a3a3;
+  --color-text-tertiary: #737373;
 
-  /* Borders */
-  --color-border-subtle: rgba(139, 92, 246, 0.2);
-  --color-border-strong: rgba(139, 92, 246, 0.4);
-  --color-border-glow: rgba(139, 92, 246, 0.6);
-
-  /* Text Colors */
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #a1a1aa;
-  --color-text-tertiary: #71717a;
-  --color-text-accent: var(--color-accent-purple);
-
-  /* Semantic Colors */
-  --color-error-text: #f87171;
-  --color-error-bg: rgba(239, 68, 68, 0.1);
-  --color-success-text: #34d399;
-  
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-serif: "Lora", "Georgia", "Times New Roman", serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Lora', serif;
 }
 
 html, body, #root {
@@ -57,149 +26,78 @@ body {
   font-family: var(--font-sans);
   color: var(--color-text-primary);
   background: var(--color-bg-deep);
-  position: relative;
-  @apply antialiased selection:bg-purple-500/30 selection:text-white;
+  @apply antialiased selection:bg-neutral-700/50 selection:text-white;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--gradient-primary);
+  background-color: var(--color-border-subtle);
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent-purple);
+  background-color: var(--color-border-strong);
 }
 
 @layer utilities {
-  @keyframes slideInUp {
-    0% { opacity: 0; transform: translateY(20px) scale(0.95); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
+  @keyframes slide-in-up {
+    from { opacity: 0; transform: translateY(1rem) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
   }
-  .animate-slide-in-up {
-    animation: slideInUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-  }
-
-  /* OPTIMIZATION: Removed animate-breathe and animate-shimmer keyframes as they are decorative and consume resources. */
-
-  .glow-border {
-    position: relative;
-    border: 1px solid var(--color-border-subtle);
-    transition: all 0.3s ease;
-  }
-  .glow-border:hover {
-    border-color: var(--color-border-glow);
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-  }
-  .glow-border:focus-within {
-    border-color: var(--color-border-glow);
-    box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+  .animate-in {
+    opacity: 0;
+    animation: slide-in-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation-delay: var(--animation-delay, 0ms);
   }
 
-  .gradient-text {
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  /* Enhanced markdown styles */
+  /* Markdown Content Styling */
   .markdown-content {
-    @apply text-sm leading-relaxed;
-    color: var(--color-text-primary);
+    @apply text-sm leading-relaxed text-neutral-300;
   }
   .markdown-content p { @apply my-2; }
-  .markdown-content strong { 
-    @apply font-semibold;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .markdown-content em { @apply italic text-purple-300; }
-  .markdown-content a {
-    @apply text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors duration-200;
-    text-decoration-color: var(--color-primary-blue);
-  }
+  .markdown-content strong { @apply font-semibold text-white; }
+  .markdown-content em { @apply italic text-neutral-400; }
+  .markdown-content a { @apply text-neutral-400 underline underline-offset-2 hover:text-white transition-colors duration-200; }
   .markdown-content code:not([class*="language-"]) {
-    @apply px-2 py-1 rounded text-xs font-mono;
-    background: rgba(139, 92, 246, 0.2);
-    color: var(--color-accent-purple);
-    border: 1px solid var(--color-border-subtle);
+    @apply px-1.5 py-0.5 rounded-md text-xs font-mono bg-neutral-800/70 text-neutral-300 border border-neutral-700;
   }
   .markdown-content pre {
-    @apply p-4 rounded-xl overflow-x-auto my-4 text-sm;
-    /* OPTIMIZATION: Removed backdrop-filter and used a solid, performant background color. */
-    background-color: var(--color-bg-elevated);
-    border: 1px solid var(--color-border-subtle);
+    @apply p-4 my-4 overflow-x-auto text-sm bg-neutral-900/80 border border-neutral-800 rounded-lg;
   }
-  .markdown-content pre code { 
-    @apply p-0 bg-transparent font-mono;
-    color: var(--color-text-secondary);
-  }
-  
-  .markdown-content ul, .markdown-content ol { @apply my-3 ml-5; }
+  .markdown-content pre code { @apply p-0 bg-transparent font-mono text-neutral-400; }
+  .markdown-content ul, .markdown-content ol { @apply my-3 ml-1; }
   .markdown-content li { @apply mb-2; }
   .markdown-content ul li {
-    @apply list-none relative pl-4;
+    @apply list-none relative pl-5;
     &::before {
-      content: "→"; 
-      color: var(--color-accent-purple);
-      position: absolute; 
-      left: 0; 
+      content: "→";
+      color: var(--color-text-tertiary);
+      position: absolute;
+      left: 0;
       top: 0;
-      font-weight: bold;
     }
   }
-  .markdown-content ol li {
-    @apply list-decimal pl-2;
-    &::marker { 
-      color: var(--color-accent-blue); 
+  .markdown-content ol li { @apply list-decimal pl-5; }
+  .markdown-content ol li::marker { 
+      color: var(--color-text-tertiary); 
       font-weight: 600;
-    }
   }
-  
   .markdown-content blockquote {
-    @apply border-l-2 pl-4 py-2 my-4 italic;
-    border-color: var(--color-accent-purple);
-    background: rgba(139, 92, 246, 0.05);
-    color: var(--color-text-secondary);
+    @apply border-l-2 pl-4 py-2 my-4 italic text-neutral-400 border-neutral-700 bg-neutral-900/50;
   }
-  
-  .markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4 {
-    @apply font-bold mt-6 mb-3 leading-tight;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .markdown-content h1, .markdown-content h2, .markdown-content h3 {
+    @apply font-bold mt-6 mb-3 leading-tight text-white font-serif;
   }
   .markdown-content h1 { @apply text-xl; }
   .markdown-content h2 { @apply text-lg; }
   .markdown-content h3 { @apply text-base; }
-  
-  .markdown-content hr {
-    @apply border-none my-6 h-px;
-    background: var(--gradient-primary);
-    opacity: 0.3;
-  }
-  
-  .markdown-content table {
-    @apply w-full my-4 border-collapse text-sm;
-    border: 1px solid var(--color-border-subtle);
-    background: rgba(10, 10, 15, 0.5);
-  }
-  .markdown-content th, .markdown-content td {
-    @apply border px-3 py-2 text-left;
-    border-color: var(--color-border-subtle);
-  }
-  .markdown-content th {
-    background: rgba(139, 92, 246, 0.1);
-    color: var(--color-accent-purple);
-    font-weight: 600;
-  }
+  .markdown-content hr { @apply border-t border-dashed border-neutral-700 my-6; }
+  .markdown-content table { @apply w-full my-4 text-sm border-collapse; }
+  .markdown-content th, .markdown-content td { @apply border p-3 text-left border-neutral-700; }
+  .markdown-content th { @apply bg-neutral-800/80 font-semibold text-neutral-200; }
 }
